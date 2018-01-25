@@ -1,24 +1,27 @@
 /**
-* Sample React Native App
-* https://github.com/facebook/react-native
-* @flow
-*/
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
 
 import React, { Component } from 'react';
 import {
-   AppRegistry,
-   StyleSheet,
-   Text,
-   View
+  Platform,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
-import ChartView from './App/index.js';
+import ChartView from 'react-native-highcharts';
 
-export default class chartWebView extends Component {
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
+});
 
-   constructor(props){
-    super(props);
-  }
-    render() {
+export default class App extends Component<{}> {
+  render() {
     var Highcharts='Highcharts';
     var conf={
             chart: {
@@ -86,9 +89,45 @@ export default class chartWebView extends Component {
                 }())
             }]
         };
+
+    const options = {
+        global: {
+            useUTC: false
+        },
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.'
+        }
+    };
+
     return (
-      <ChartView style={{flex:1}} config={conf} stock={false}></ChartView>
+      <ChartView 
+        style={{height:300}}
+        config={conf}
+        options={options}
+        baseUri={'web'}
+        libsUri={['highcharts.js']}
+        constructMethod={ChartView.ConstructMethod.CHART}
+      />
     );
   }
 }
-AppRegistry.registerComponent('chartWebView', () => chartWebView);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
