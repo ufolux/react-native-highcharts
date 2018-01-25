@@ -66,7 +66,7 @@ class ChartWeb extends Component {
                                 Highcharts.setOptions(${JSON.stringify(this.props.options)});
                                 Highcharts.${this.props.constructMethod}('container', `,
                 end:`      );
-                        });
+                        }
                         </script>
                     </head>
                     <body>
