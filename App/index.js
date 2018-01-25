@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import {
     AppRegistry,
     StyleSheet,
@@ -11,8 +12,36 @@ import {
 
 const win = Dimensions.get('window');
 class ChartWeb extends Component {
+    static ConstructMethod = {
+        STOCK_CHART: 'stockChart',
+        CHART: 'chart'
+    }
+
+    static PropTypes = {
+        style: PropTypes.object,
+        config: PropTypes.object,
+        options: PropTypes.object,
+        baseUri: PropTypes.string,
+        libsUri: PropTypes.array,
+        constructMethod: PropTypes.string,
+    }
+
+    static defaultProps = {
+        style: {},
+        config: {},
+        options: {},
+        baseUri: '',
+        libsUri: [],
+        constructMethod: 'stockChart',
+    }
+
     constructor(props){
         super(props);
+
+        let scriptUriArr = libsUri.map(item => {
+            return `<script src="${item}"></script>`
+        })
+        let scripts = scriptUriArr.join('')
 
         this.state={
             init:`<html>
@@ -31,19 +60,12 @@ class ChartWeb extends Component {
                     }
                     </style>
                     <head>
-                        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-                        ${this.props.stock ? '<script src="https://code.highcharts.com/stock/highstock.js"></script>'
-                                      : '<script src="https://code.highcharts.com/highcharts.js"></script>'}
-                        ${this.props.more ? '<script src="https://code.highcharts.com/highcharts-more.js"></script>'
-                                      : ''}
-                        ${this.props.guage ? '<script src="https://code.highcharts.com/modules/solid-gauge.js"></script>'
-                                      : ''}
-                        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                        ${scripts}
                         <script>
-                        $(function () {
-                            Highcharts.setOptions(${JSON.stringify(this.props.options)});
-                            Highcharts.${this.props.stock ? 'stockChart' : 'chart'}('container', `,
-            end:`           );
+                            window.onload = function() {
+                                Highcharts.setOptions(${JSON.stringify(this.props.options)});
+                                Highcharts.${this.props.constructMethod}('container', `,
+                end:`      );
                         });
                         </script>
                     </head>
@@ -81,7 +103,7 @@ class ChartWeb extends Component {
               <WebView
                   onLayout={this.reRenderWebView}
                   style={styles.full}
-                  source={{ html: concatHTML, baseUrl: 'web/' }}
+                  source={{ html: concatHTML, baseUrl: this.props.baseUri }}
                   javaScriptEnabled={true}
                   domStorageEnabled={true}
                   scalesPageToFit={true}
