@@ -38,7 +38,7 @@ class ChartWeb extends Component {
     constructor(props){
         super(props);
 
-        let scriptUriArr = libsUri.map(item => {
+        let scriptUriArr = props.libsUri.map(item => {
             return `<script src="${item}"></script>`
         })
         let scripts = scriptUriArr.join('')
