@@ -18,15 +18,17 @@ class ChartWeb extends Component {
     }
 
     static propTypes = {
-        style: PropTypes.object,
+        chartData: propTypes.object,
         config: PropTypes.object,
         options: PropTypes.object,
         baseUri: PropTypes.string,
         libsUri: PropTypes.array,
         constructMethod: PropTypes.string,
+        style: PropTypes.object
     }
 
     static defaultProps = {
+        chartData: {},
         style: {},
         config: {},
         options: {},
@@ -42,6 +44,11 @@ class ChartWeb extends Component {
             return `<script src="${item}"></script>`
         })
         let scripts = scriptUriArr.join('')
+
+        let chartData = JSON.stringify(this.props.chartData, function (key, value) {//create string of json but if it detects function it uses toString()
+            return (typeof value === 'function') ? value.toString() : value;
+        });
+        chartData = JSON.parse(chartData)
 
         this.state={
             init:`<html>
@@ -62,6 +69,7 @@ class ChartWeb extends Component {
                     <head>
                         ${scripts}
                         <script>
+                            ${this.flattenObject(chartData)}
                             window.onload = function() {
                                 Highcharts.setOptions(${JSON.stringify(this.props.options)});
                                 Highcharts.${this.props.constructMethod}('container', `,
@@ -93,8 +101,6 @@ class ChartWeb extends Component {
         let config = JSON.stringify(this.props.config, function (key, value) {//create string of json but if it detects function it uses toString()
             return (typeof value === 'function') ? value.toString() : value;
         });
-
-
         config = JSON.parse(config)
         let concatHTML = `${this.state.init}${flattenObject(config)}${this.state.end}`;
         
