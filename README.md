@@ -95,7 +95,14 @@ render() {
     };
 
     return (
-      <ChartView style={{height:300}} config={conf} options={options}></ChartView>
+      <ChartView
+        style={{height:300}}
+        config={conf}
+        options={options}
+        baseUri={'web'} // your native resources dir
+        libsUri={['highcharts.js']} // your lib files saved in your native resources dir
+        constructMethod={ChartView.ConstructMethod.CHART}
+      />
     );
 }
 ```
