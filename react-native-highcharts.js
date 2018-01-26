@@ -18,7 +18,7 @@ class ChartWeb extends Component {
     }
 
     static propTypes = {
-        chartData: propTypes.object,
+        chartData: PropTypes.object,
         config: PropTypes.object,
         options: PropTypes.object,
         baseUri: PropTypes.string,
