@@ -18,7 +18,7 @@ class ChartView extends Component {
     }
 
     static propTypes = {
-        chartData: propTypes.object,
+        chartData: PropTypes.object,
         config: PropTypes.object.isRequired,
         options: PropTypes.object,
         baseUri: PropTypes.string.isRequired,
