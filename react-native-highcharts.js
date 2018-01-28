@@ -11,20 +11,20 @@ import {
 } from 'react-native';
 
 const win = Dimensions.get('window');
-class ChartWeb extends Component {
+class ChartView extends Component {
     static ConstructMethod = {
         STOCK_CHART: 'stockChart',
         CHART: 'chart'
     }
 
     static propTypes = {
-        chartData: PropTypes.object,
-        config: PropTypes.object,
+        chartData: propTypes.object,
+        config: PropTypes.object.isRequired,
         options: PropTypes.object,
-        baseUri: PropTypes.string,
-        libsUri: PropTypes.array,
-        constructMethod: PropTypes.string,
-        style: PropTypes.object
+        baseUri: PropTypes.string.isRequired,
+        libsUri: PropTypes.array.isRequired,
+        constructMethod: PropTypes.string.isRequired,
+        style: PropTypes.object.isRequired
     }
 
     static defaultProps = {
@@ -69,7 +69,7 @@ class ChartWeb extends Component {
                     <head>
                         ${scripts}
                         <script>
-                            ${this.flattenObject(chartData)}
+                            ${flattenObject(chartData)}
                             window.onload = function() {
                                 Highcharts.setOptions(${JSON.stringify(this.props.options)});
                                 Highcharts.${this.props.constructMethod}('container', `,
@@ -158,4 +158,4 @@ var styles = StyleSheet.create({
     }
 });
 
-module.exports = ChartWeb;
+module.exports = ChartView;
