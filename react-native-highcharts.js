@@ -126,7 +126,11 @@ var flattenObject = function (obj, str='{') {
     Object.keys(obj).forEach(function(key) {
         str += `${key}: ${flattenText(obj[key])}, `
     })
-    return `${str.slice(0, str.length - 2)}}`
+    if (str === '{') {
+        return ''
+    } else {
+        return `${str.slice(0, str.length - 2)}}`
+    }
 };
 
 var flattenText = function(item,key) {
