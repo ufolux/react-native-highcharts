@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 const win = Dimensions.get('window');
-class ChartWeb extends Component {
+class ChartView extends Component {
     static ConstructMethod = {
         STOCK_CHART: 'stockChart',
         CHART: 'chart'
@@ -158,4 +158,4 @@ var styles = StyleSheet.create({
     }
 });
 
-module.exports = ChartWeb;
+module.exports = ChartView;
