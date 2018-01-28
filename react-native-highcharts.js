@@ -127,7 +127,7 @@ var flattenObject = function (obj, str='{') {
         str += `${key}: ${flattenText(obj[key])}, `
     })
     if (str === '{') {
-        return ''
+        return '{}'
     } else {
         return `${str.slice(0, str.length - 2)}}`
     }
