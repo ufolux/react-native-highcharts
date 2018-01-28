@@ -69,7 +69,7 @@ class ChartWeb extends Component {
                     <head>
                         ${scripts}
                         <script>
-                            ${this.flattenObject(chartData)}
+                            ${flattenObject(chartData)}
                             window.onload = function() {
                                 Highcharts.setOptions(${JSON.stringify(this.props.options)});
                                 Highcharts.${this.props.constructMethod}('container', `,
