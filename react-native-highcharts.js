@@ -19,12 +19,12 @@ class ChartWeb extends Component {
 
     static propTypes = {
         chartData: propTypes.object,
-        config: PropTypes.object,
+        config: PropTypes.object.isRequired,
         options: PropTypes.object,
-        baseUri: PropTypes.string,
-        libsUri: PropTypes.array,
-        constructMethod: PropTypes.string,
-        style: PropTypes.object
+        baseUri: PropTypes.string.isRequired,
+        libsUri: PropTypes.array.isRequired,
+        constructMethod: PropTypes.string.isRequired,
+        style: PropTypes.object.isRequired
     }
 
     static defaultProps = {
