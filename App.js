@@ -1,161 +1,133 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
 import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View,
-    WebView,
-    Image,
-    Dimensions
+  Platform,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
+import ChartView from 'react-native-highcharts';
 
-const win = Dimensions.get('window');
-class ChartWeb extends Component {
-    static ConstructMethod = {
-        STOCK_CHART: 'stockChart',
-        CHART: 'chart'
-    }
-
-    static propTypes = {
-        chartData: PropTypes.object,
-        config: PropTypes.object,
-        options: PropTypes.object,
-        baseUri: PropTypes.string,
-        libsUri: PropTypes.array,
-        constructMethod: PropTypes.string,
-        style: PropTypes.object
-    }
-
-    static defaultProps = {
-        chartData: {},
-        style: {},
-        config: {},
-        options: {},
-        baseUri: '',
-        libsUri: [],
-        constructMethod: 'stockChart',
-    }
-
-    constructor(props){
-        super(props);
-
-        let scriptUriArr = props.libsUri.map(item => {
-            return `<script src="${item}"></script>`
-        })
-        let scripts = scriptUriArr.join('')
-
-        let chartData = JSON.stringify(this.props.chartData, function (key, value) {//create string of json but if it detects function it uses toString()
-            return (typeof value === 'function') ? value.toString() : value;
-        });
-        chartData = JSON.parse(chartData)
-
-        this.state={
-            init:`<html>
-                    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
-                    <style media="screen" type="text/css">
-                    #container {
-                        width:100%;
-                        height:100%;
-                        top:0;
-                        left:0;
-                        right:0;
-                        bottom:0;
-                        position:absolute;
-                        user-select: none;
-                        -webkit-user-select: none;
-                    }
-                    </style>
-                    <head>
-                        ${scripts}
-                        <script>
-                            ${this.flattenObject(chartData)}
-                            window.onload = function() {
-                                Highcharts.setOptions(${JSON.stringify(this.props.options)});
-                                Highcharts.${this.props.constructMethod}('container', `,
-                end:`      );
-                        }
-                        </script>
-                    </head>
-                    <body>
-                        <div id="container">
-                        </div>
-                    </body>
-                </html>`,
-            Wlayout:{
-                height:win.height,
-                width:win.width
-            }
-        }
-    }
-
-    // used to resize on orientation of display
-    reRenderWebView(e) {
-        this.setState({
-            height: e.nativeEvent.layout.height,
-            width: e.nativeEvent.layout.width,
-        })
-    }
-
-    render() {
-        let config = JSON.stringify(this.props.config, function (key, value) {//create string of json but if it detects function it uses toString()
-            return (typeof value === 'function') ? value.toString() : value;
-        });
-        config = JSON.parse(config)
-        let concatHTML = `${this.state.init}${flattenObject(config)}${this.state.end}`;
-        
-        return (
-          <View style={this.props.style}>
-              <WebView
-                  onLayout={this.reRenderWebView}
-                  style={styles.full}
-                  source={{ html: concatHTML, baseUrl: this.props.baseUri }}
-                  javaScriptEnabled={true}
-                  domStorageEnabled={true}
-                  scalesPageToFit={true}
-                  scrollEnabled={false}
-                  automaticallyAdjustContentInsets={true}
-                  {...this.props}
-              />
-          </View>
-        );
-    };
-};
-
-var flattenObject = function (obj, str='{') {
-    Object.keys(obj).forEach(function(key) {
-        str += `${key}: ${flattenText(obj[key])}, `
-    })
-    return `${str.slice(0, str.length - 2)}}`
-};
-
-var flattenText = function(item,key) {
-    if(key=="y") console.log(item, typeof item);
-    var str = ''
-    if (item && typeof item === 'object' && item.length == undefined) {
-        str += flattenObject(item)
-    } else if (item && typeof item === 'object' && item.length !== undefined) {
-        str += '['
-        item.forEach(function(k2) {
-            str += `${flattenText(k2)}, `
-        })
-        if(item.length>0) str = str.slice(0, str.length - 2)
-        str += ']'
-    } else if(typeof item === 'string' && item.slice(0, 8) === 'function') {
-        str += `${item}`
-    } else if(typeof item === 'string') {
-        str += `\"${item.replace(/"/g, '\\"')}\"`
-    } else {
-        str += `${item}`
-    }
-    return str
-};
-
-var styles = StyleSheet.create({
-    full: {
-        flex:1,
-        backgroundColor:'transparent'
-    }
+const instructions = Platform.select({
+  ios: 'Press Cmd+R to reload,\n' +
+    'Cmd+D or shake for dev menu',
+  android: 'Double tap R on your keyboard to reload,\n' +
+    'Shake or press menu button for dev menu',
 });
 
-module.exports = ChartWeb;
+export default class App extends Component<{}> {
+  render() {
+    var Highcharts='Highcharts';
+    var conf={
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function () {
+                            var x = (new Date()).getTime(), // current time
+                                y = Math.random();
+                            series.addPoint([x, y], true, true);
+                        }, 1000);
+                    }
+                }
+            },
+            title: {
+                text: 'Live random data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'Random data',
+                data: (function () {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+
+                    for (i = -19; i <= 0; i += 1) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: Math.random()
+                        });
+                    }
+                    return data;
+                }())
+            }]
+        };
+
+    const options = {
+        global: {
+            useUTC: false
+        },
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.'
+        }
+    };
+
+    return (
+      <ChartView 
+        style={{height:300}}
+        config={conf}
+        options={options}
+        baseUri={'web'}
+        libsUri={['highcharts.js']}
+        constructMethod={ChartView.ConstructMethod.CHART}
+      />
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+});
