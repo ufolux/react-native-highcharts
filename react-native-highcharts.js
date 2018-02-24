@@ -147,7 +147,7 @@ class ChartView extends Component {
             return needUpdate
         }
 
-        return !(nextStyleStr === lastStyleStr && nextProps.baseUri === baseUri && nextProps.libsUri === libsUri && nextProps.constructMethod === nextProps.constructMethod)
+        return !(nextStyleStr === lastStyleStr && nextProps.baseUri === this.props.baseUri && nextProps.libsUri === this.props.libsUri && nextProps.constructMethod === this.props.constructMethod)
     }
 
     // used to resize on orientation of display
