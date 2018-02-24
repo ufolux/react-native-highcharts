@@ -123,6 +123,8 @@ class ChartView extends Component {
         const chartDataStr = this._getChartDataStr(nextProps.chartData)
         const configStr = this._getConfigStr(nextProps.config)
         const optionsStr = this._getOptionsStr(nextProps.options)
+        const nextStyleStr = JSON.stringify(nextProps.style)
+        const lastStyleStr = JSON.stringify(this.props.style)
 
         let needUpdate = false
 
@@ -145,7 +147,7 @@ class ChartView extends Component {
             return needUpdate
         }
 
-        return !(nextProps.style === style && nextProps.baseUri === baseUri && nextProps.libsUri === libsUri && nextProps.constructMethod === nextProps.constructMethod)
+        return !(nextStyleStr === lastStyleStr && nextProps.baseUri === baseUri && nextProps.libsUri === libsUri && nextProps.constructMethod === nextProps.constructMethod)
     }
 
     // used to resize on orientation of display
