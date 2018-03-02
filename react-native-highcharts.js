@@ -24,7 +24,6 @@ class ChartView extends Component {
         baseUri: PropTypes.string.isRequired,
         libsUri: PropTypes.array.isRequired,
         constructMethod: PropTypes.string.isRequired,
-        style: PropTypes.object.isRequired,
         onEvent: PropTypes.func
     }
 
