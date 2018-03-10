@@ -41,9 +41,9 @@ class ChartView extends Component {
       })
     let scripts = scriptUriArr.join('')
 
-    this.chartDataStr = this._getChartDataStr(this.props.chartData)
-    this.optionsStr = this._getOptionsStr(this.props.options)
-    this.configStr = this._getConfigStr(this.props.config)
+    this.chartDataStr = this._getChartDataStr(props.chartData)
+    this.optionsStr = this._getOptionsStr(props.options)
+    this.configStr = this._getConfigStr(props.config)
 
     this.headHtml = `<html>
                     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
@@ -66,7 +66,7 @@ class ChartView extends Component {
                             ${this.chartDataStr}
                             window.onload = function() {
                                 Highcharts.setOptions(${this.optionsStr});
-                                Highcharts.${this.props.constructMethod}('container', `
+                                Highcharts.${props.constructMethod}('container', `
     this.footerHtml = `      );
                         }
                         </script>
