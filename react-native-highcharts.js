@@ -15,7 +15,8 @@ class ChartView extends Component {
     baseUri: PropTypes.string.isRequired,
     libsUri: PropTypes.array.isRequired,
     constructMethod: PropTypes.string.isRequired,
-    onEvent: PropTypes.func
+    onEvent: PropTypes.func,
+    executeAfterChartCreated: PropTypes.string
   }
 
   static defaultProps = {
@@ -66,8 +67,9 @@ class ChartView extends Component {
                             ${this.chartDataStr}
                             window.onload = function() {
                                 Highcharts.setOptions(${this.optionsStr});
-                                Highcharts.${props.constructMethod}('container', `
+                                var chart = Highcharts.${props.constructMethod}('container', `
     this.footerHtml = `      );
+                            ${this.props.executeAfterChartCreated && this.props.executeAfterChartCreated}
                         }
                         </script>
                     </head>
@@ -91,7 +93,7 @@ class ChartView extends Component {
               : value
           })
           let newChartData = JSON.parse(dataStr)
-          chartDataStr += `let ${key} = ${flattenObject(newChartData)}\n`
+          chartDataStr += `var ${key} = ${flattenObject(newChartData)}\n`
         }
       }
     }
