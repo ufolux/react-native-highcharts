@@ -177,21 +177,28 @@ class ChartView extends Component {
   }
 }
 
+let isArray = (o) => {
+  return Object.prototype.toString.call(o) === '[object Array]'
+}
+
 let flattenObject = function (obj, str = '{') {
-  Object
+  if (obj === null || obj === undefined) {
+    return obj
+  } if (isArray(obj)) {
+    return flattenText(obj)
+  } else {
+    Object
     .keys(obj)
     .forEach(function (key) {
-      str += `${key}: ${flattenText(obj[key])}, `
+      str += `'${key}': ${flattenText(obj[key])}, `
     })
+  }
+  
   if (str === '{') {
     return '{}'
   } else {
     return `${str.slice(0, str.length - 2)}}`
   }
-}
-
-let isArray = (o) => {
-  return Object.prototype.toString.call(o) === '[object Array]'
 }
 
 let flattenText = function (item, key) {
