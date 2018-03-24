@@ -15,7 +15,8 @@ class ChartView extends Component {
     baseUri: PropTypes.string.isRequired,
     libsUri: PropTypes.array.isRequired,
     constructMethod: PropTypes.string.isRequired,
-    onEvent: PropTypes.func
+    onEvent: PropTypes.func,
+    executeAfterChartCreated: PropTypes.string
   }
 
   static defaultProps = {
@@ -66,8 +67,9 @@ class ChartView extends Component {
                             ${this.chartDataStr}
                             window.onload = function() {
                                 Highcharts.setOptions(${this.optionsStr});
-                                Highcharts.${props.constructMethod}('container', `
+                                var chart = Highcharts.${props.constructMethod}('container', `
     this.footerHtml = `      );
+                            ${this.props.executeAfterChartCreated && this.props.executeAfterChartCreated}
                         }
                         </script>
                     </head>
@@ -91,7 +93,7 @@ class ChartView extends Component {
               : value
           })
           let newChartData = JSON.parse(dataStr)
-          chartDataStr += `let ${key} = ${flattenObject(newChartData)}\n`
+          chartDataStr += `var ${key} = ${flattenObject(newChartData)}\n`
         }
       }
     }
@@ -175,21 +177,28 @@ class ChartView extends Component {
   }
 }
 
+let isArray = (o) => {
+  return Object.prototype.toString.call(o) === '[object Array]'
+}
+
 let flattenObject = function (obj, str = '{') {
-  Object
+  if (obj === null || obj === undefined) {
+    return obj
+  } if (isArray(obj)) {
+    return flattenText(obj)
+  } else {
+    Object
     .keys(obj)
     .forEach(function (key) {
-      str += `${key}: ${flattenText(obj[key])}, `
+      str += `'${key}': ${flattenText(obj[key])}, `
     })
+  }
+  
   if (str === '{') {
     return '{}'
   } else {
     return `${str.slice(0, str.length - 2)}}`
   }
-}
-
-let isArray = (o) => {
-  return Object.prototype.toString.call(o) === '[object Array]'
 }
 
 let flattenText = function (item, key) {
