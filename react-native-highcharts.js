@@ -50,6 +50,7 @@ class ChartView extends Component {
     this.configStr = this._getConfigStr(props.config)
 
     this.headHtml = `<html>
+                    <meta name="format-detection" content="telephone=no">
                     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
                     <style media="screen" type="text/css">
                     #container {
