@@ -174,6 +174,7 @@ class ChartView extends Component {
               .props
               .onEvent(e.nativeEvent.data, e)
           }}
+          renderError={() => <View />}
           automaticallyAdjustContentInsets
           {...this.props} />
       </View>
