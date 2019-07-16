@@ -42,16 +42,20 @@ class ChartView extends Component {
       })
     let scripts = scriptUriArr.join('')
 
+    let containerWidth = props.containerWidth ? props.containerWidth + 'px' : '100%'
+    let containerHeight = props.containerHeight ? props.containerHeight + 'px' : '100%'
+
     this.chartDataStr = this._getChartDataStr(props.chartData)
     this.optionsStr = this._getOptionsStr(props.options)
     this.configStr = this._getConfigStr(props.config)
 
     this.headHtml = `<html>
+                    <meta name="format-detection" content="telephone=no">
                     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0" />
                     <style media="screen" type="text/css">
                     #container {
-                        width:100%;
-                        height:100%;
+                        width: ${containerWidth};
+                        height: ${containerHeight};
                         top:0;
                         left:0;
                         right:0;
@@ -170,6 +174,7 @@ class ChartView extends Component {
               .props
               .onEvent(e.nativeEvent.data, e)
           }}
+          renderError={() => <View />}
           automaticallyAdjustContentInsets
           {...this.props} />
       </View>
@@ -193,7 +198,7 @@ let flattenObject = function (obj, str = '{') {
       str += `'${key}': ${flattenText(obj[key])}, `
     })
   }
-  
+
   if (str === '{') {
     return '{}'
   } else {
